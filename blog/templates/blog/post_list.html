@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block content %}
+
+<div class="row">
+ 
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">    
+
+        {% for post in object_list %}
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <a href="{% url 'post-detail' post.slug %}">{{ post.title|upper }}</a>
+                        <span class="pull-right">
+                            <i>
+                                <small>
+                                    {{ post.insert_date }} | {{ post.author }}
+                                </small>
+                            </i>
+                        </span>                       
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    {{ post.body|safe|linebreaksbr|truncatewords_html:50 }}   
+                </div>
+            </div>  
+
+        {% endfor %}  
+     
+
+        {% if is_paginated %}
+        <nav class="text-center">
+          <ul class="pagination">
+            {% if page_obj.has_previous %}
+              <li><a href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+            {% else %}
+              <li class="disabled"><a href="#">&laquo;</a></li>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+              {% ifequal num page_obj.number %}
+                <li class="active"><a href="#">{{ num }}<span class="sr-only">(current)</span></a></li>
+              {% else %}
+                <li><a href="?page={{ num }}">{{ num }}</a></li>
+              {% endifequal %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+              <li><a href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+            {% else %}
+              <li class="disabled"><a href="#">&raquo;</a></li>
+            {% endif %}
+          <ul>
+        </nav>
+        {% endif %}
+
+    </div> 
+</div>   
+{% endblock %}
+
